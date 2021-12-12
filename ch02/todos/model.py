@@ -9,7 +9,7 @@ class Todo(BaseModel):
         schema_extra = {
             "example": {
                 "id": 1,
-                "item": "Example schmea!"
+                "item": "Example Schema!"
             }
         }
 
