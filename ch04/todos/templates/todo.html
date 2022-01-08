@@ -1,0 +1,50 @@
+{% extends "home.html" %}
+
+{% block todo_container %}
+<main class="container">
+    <hr>
+
+    <section class="container-fluid">
+        <form method="post">
+            <div class="col-auto">
+                <div class="input-group mb-3">
+                    <input type="text" name="item" value="{{ item }}" class="form-control"
+                           placeholder="Purchase Packt's Python workshop course" aria-label="Add a todo"
+                           aria-describedby="button-addon2"/>
+                    <button class="btn btn-outline-primary" type="submit" id="button-addon2"
+                            data-mdb-ripple-color="dark">
+                        Add Todo
+                    </button>
+                </div>
+            </div>
+        </form>
+    </section>
+
+
+    {% if todo %}
+    <article class="card container-fluid">
+        <br/>
+        <h4>Todo ID: {{ todo.id }} </h4>
+        <p>
+            <strong>
+                Item: {{ todo.item }}
+            </strong>
+        </p>
+    </article>
+    {% else %}
+    <section class="container-fluid">
+        <h2 align="center">Todos</h2>
+        <br>
+        <div class="card">
+            <ul class="list-group list-group-flush">
+                {% for todo in todos %}
+                <li class="list-group-item">
+                    {{ loop.index }}. <a href="/todo/{{ loop.index }}"> {{ todo.item }} </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}
