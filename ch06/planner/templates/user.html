@@ -1,0 +1,93 @@
+{% extends "index.html" %}
+
+{% block user %}
+
+{% if signed_in %}
+
+Welcome to your dashboard!!
+
+{% elif sign_in %}
+
+<section class="vh-100">
+    <form action="/user/signin" method="post">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                    <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+
+                            <h3 class="mb-5">Sign in</h3>
+
+                            <div class="form-outline mb-4">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" value="{{ email }}" class="form-control form-control-lg"/>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <label class="form-label">Password</label>
+                                <input type="password" name="password" value="{{ password }}" class="form-control form-control-lg"/>
+                            </div>
+
+                            <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+
+                            <hr class="my-4">
+
+                            <a href="/user/signup" class="btn btn-lg btn-block btn-default" role="button">Don't have an
+                                account? Sign Up! </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+
+{% else %}
+
+<section class="vh-100">
+    <form method="post">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                    <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+
+                            <h3 class="mb-5">Sign up</h3>
+
+                            <div class="form-outline mb-4">
+                                <label class="form-label">Username</label>
+                                <input type="text" name="username" value="{{ username }}"
+                                       class="form-control form-control-lg"/>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" value="{{ email }}"
+                                       class="form-control form-control-lg"/>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <label class="form-label">Password</label>
+                                <input type="password" name="password" value="{{ password }}"
+                                       class="form-control form-control-lg"/>
+                            </div>
+
+                            <button class="btn btn-primary btn-lg btn-block" type="submit">Sign Up</button>
+
+                            <hr class="my-4">
+
+                            <a href="/user/" class="btn btn-lg btn-block btn-default" role="button">Have an
+                                account? Sign In! </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+
+{% endif %}
+
+{% endblock %}

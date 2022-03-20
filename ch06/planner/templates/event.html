@@ -1,0 +1,50 @@
+{% extends "index.html" %}
+
+{% block events %}
+
+{% if event %}
+<section class="post-content-section">
+    <div class="container">
+        <div class="thumbnail">
+            <img src="{{ event.image }}" alt="{{ event.title }}">
+            <div class="caption">
+                <h2>{{ event.title }}</h2>
+            </div>
+        </div>
+        <p>
+            {{ event.description }}
+        </p>
+
+        <h4>Location</h4>
+        <p>{{ event.location }}</p>
+
+        <h4>Tags</h4>
+        <p>{{ event.tags | join(', ') | capitalize }}</p>
+    </div>
+
+</section>
+{% endif %}
+
+{% for event in events %}
+<div class="jumbotron card">
+    <div class="container-fluid">
+        <div class="thumbnail">
+            <img src="{{ event.image }}" class="img-fluid" alt="{{ event.title }}">
+            <div class="caption">
+                <h2><a href="/event/{{ event.id }}"> {{ event.title }} </a></h2>
+            </div>
+        </div>
+        <h4>Description</h4>
+        <p>{{ event.description }} </p>
+
+        <h4>Location</h4>
+        <p>This event will be happening in {{ event.location }}</p>
+
+        <h4>Tags</h4>
+        {{ event.tags | join(', ') | capitalize }}
+    </div>
+</div>
+
+{% endfor %}
+
+{% endblock %}
