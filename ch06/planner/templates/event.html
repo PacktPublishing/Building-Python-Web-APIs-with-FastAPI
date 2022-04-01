@@ -6,7 +6,7 @@
 <section class="post-content-section">
     <div class="container">
         <div class="thumbnail">
-            <img src="{{ event.image }}" alt="{{ event.title }}">
+            <img src="{{ url_for('images', path='/') }}/{{event.image}}" alt="{{ event.title }}" class="img-fluid">
             <div class="caption">
                 <h2>{{ event.title }}</h2>
             </div>
@@ -29,7 +29,7 @@
 <div class="jumbotron card">
     <div class="container-fluid">
         <div class="thumbnail">
-            <img src="{{ event.image }}" class="img-fluid" alt="{{ event.title }}">
+            <img src="{{ url_for('images', path='/') }}/{{event.image}}" alt="{{ event.title }}" class="img-thumbnail img-responsive img-fluid">
             <div class="caption">
                 <h2><a href="/event/{{ event.id }}"> {{ event.title }} </a></h2>
             </div>
