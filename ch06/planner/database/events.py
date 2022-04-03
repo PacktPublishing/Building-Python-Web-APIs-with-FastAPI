@@ -1,5 +1,5 @@
 from sqlmodel import JSON, SQLModel, Field, Column
-from typing import List
+from typing import List, Optional
 
 
 class Events(SQLModel, table=True):
@@ -12,3 +12,11 @@ class Events(SQLModel, table=True):
 
     class Config:
         arbitrary_types_allowed = True
+
+
+class EventUpdate(SQLModel):
+    title: Optional[str]
+    image: Optional[str]
+    description: Optional[str]
+    tags: Optional[List[str]]
+    location: Optional[str]

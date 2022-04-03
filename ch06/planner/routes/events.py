@@ -1,12 +1,11 @@
-from pathlib import Path
+from typing import Optional, List
 
-from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile, status, Form, File
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, status, File, Form
 from fastapi.templating import Jinja2Templates
 from sqlmodel import select
 
 from database.connection import get_session
-from database.events import Events
+from database.events import Events, EventUpdate
 
 event_router = APIRouter(
     tags=["Events"]
@@ -15,41 +14,18 @@ event_router = APIRouter(
 templates = Jinja2Templates(directory="templates/")
 
 
-@event_router.get("/", response_class=HTMLResponse)
-async def retrieve_all_events(request: Request, session=Depends(get_session)):
+@event_router.get("/", response_model=List[Events])
+async def retrieve_all_events(session=Depends(get_session)):
     statement = select(Events)
     events = session.exec(statement).all()
-    return templates.TemplateResponse(
-        "event.html",
-        {
-            "request": request,
-            "events": events
-        }
-    )
+    return events
 
 
-@event_router.get("/new", response_class=HTMLResponse)
-async def add_new_event_page(request: Request):
-    return templates.TemplateResponse(
-        "new_event.html",
-        {
-            "request": request
-        }
-    )
-
-
-@event_router.get("/{id}", response_class=HTMLResponse)
-async def retrieve_event(id: int, request: Request, session=Depends(get_session)):
+@event_router.get("/{id}", response_model=Events)
+async def retrieve_event(id: int, session=Depends(get_session)):
     event = session.get(Events, id)
     if event:
-        return templates.TemplateResponse(
-            "event.html",
-            {
-                "request": request,
-                "event": event
-            }
-        )
-
+        return event
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail="Event with supplied ID does not exist"
@@ -57,8 +33,7 @@ async def retrieve_event(id: int, request: Request, session=Depends(get_session)
 
 
 @event_router.post("/new")
-async def create_event(request: Request, title: str = Form(...), description: str = Form(...), tags: str = Form(...), location: str = Form(...), image: UploadFile = File(...), session=Depends(get_session)):
-
+async def create_event(title: str = Form(...), description: str = Form(...), tags: str = Form(...), location: str = Form(...), image: UploadFile = File(...), session=Depends(get_session)):
     uploaded_image = f"images/{image.filename}"
     with open(uploaded_image, 'wb') as img:
         image_content = await image.read()
@@ -76,22 +51,42 @@ async def create_event(request: Request, title: str = Form(...), description: st
     session.commit()
     session.refresh(new_event)
 
-    event = session.get(Events, new_event.id)
-
-    return templates.TemplateResponse("event.html", {
-        "request": request,
-        "event": event
-    })
+    return {
+        "message": "Event created successfully"
+    }
 
 
-@event_router.delete("/{id}")
-async def delete_event(id: int):
-    for event in events:
-        if event.id == id:
-            events.remove(event)
-            return {
-                "message": "Event deleted successfully"
-            }
+@event_router.put("/edit/{id}", response_model=Events)
+async def update_event(id: int, new_data: EventUpdate, session=Depends(get_session)
+):
+    event = session.get(Events, id)
+    if event:
+        event_data = new_data.dict(exclude_unset=True)
+        for key, value in event_data.items():
+            setattr(event, key, value)
+
+        session.add(event)
+        session.commit()
+        session.refresh(event)
+
+        return event
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="Event with supplied ID does not exist"
+    )
+
+
+@event_router.delete("/delete/{id}")
+async def delete_event(id: int, session=Depends(get_session)):
+    event = session.get(Events, id)
+    if event:
+        session.delete(event)
+        session.commit()
+
+        return {
+            "message": "Event deleted successfully"
+        }
 
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
