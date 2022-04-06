@@ -1,6 +1,6 @@
 from sqlmodel import SQLModel, Session, create_engine
 
-from database.events import Events
+from models.events import Event
 
 database_file = "planner.db"
 database_connection_string = f"sqlite:///{database_file}"

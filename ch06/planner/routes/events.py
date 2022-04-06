@@ -1,11 +1,11 @@
-from typing import Optional, List
+from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, status, File, Form
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.templating import Jinja2Templates
 from sqlmodel import select
 
 from database.connection import get_session
-from database.events import Events, EventUpdate
+from models.events import Event, EventUpdate
 
 event_router = APIRouter(
     tags=["Events"]
@@ -14,16 +14,16 @@ event_router = APIRouter(
 templates = Jinja2Templates(directory="templates/")
 
 
-@event_router.get("/", response_model=List[Events])
-async def retrieve_all_events(session=Depends(get_session)):
-    statement = select(Events)
+@event_router.get("/", response_model=List[Event])
+async def retrieve_all_Event(session=Depends(get_session)):
+    statement = select(Event)
     events = session.exec(statement).all()
     return events
 
 
-@event_router.get("/{id}", response_model=Events)
+@event_router.get("/{id}", response_model=Event)
 async def retrieve_event(id: int, session=Depends(get_session)):
-    event = session.get(Events, id)
+    event = session.get(Event, id)
     if event:
         return event
     raise HTTPException(
@@ -33,20 +33,7 @@ async def retrieve_event(id: int, session=Depends(get_session)):
 
 
 @event_router.post("/new")
-async def create_event(title: str = Form(...), description: str = Form(...), tags: str = Form(...), location: str = Form(...), image: UploadFile = File(...), session=Depends(get_session)):
-    uploaded_image = f"images/{image.filename}"
-    with open(uploaded_image, 'wb') as img:
-        image_content = await image.read()
-        img.write(image_content)
-
-    tags = tags.split(",")
-    new_event = Events(
-        title=title,
-        image=image.filename,
-        description=description,
-        tags=tags,
-        location=location
-    )
+async def create_event(new_event: Event, session=Depends(get_session)):
     session.add(new_event)
     session.commit()
     session.refresh(new_event)
@@ -56,10 +43,10 @@ async def create_event(title: str = Form(...), description: str = Form(...), tag
     }
 
 
-@event_router.put("/edit/{id}", response_model=Events)
+@event_router.put("/edit/{id}", response_model=Event)
 async def update_event(id: int, new_data: EventUpdate, session=Depends(get_session)
 ):
-    event = session.get(Events, id)
+    event = session.get(Event, id)
     if event:
         event_data = new_data.dict(exclude_unset=True)
         for key, value in event_data.items():
@@ -79,7 +66,7 @@ async def update_event(id: int, new_data: EventUpdate, session=Depends(get_sessi
 
 @event_router.delete("/delete/{id}")
 async def delete_event(id: int, session=Depends(get_session)):
-    event = session.get(Events, id)
+    event = session.get(Event, id)
     if event:
         session.delete(event)
         session.commit()
