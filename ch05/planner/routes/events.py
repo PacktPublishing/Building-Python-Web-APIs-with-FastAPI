@@ -1,6 +1,4 @@
-from fastapi import APIRouter, Body, HTTPException, Request, status
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from fastapi import APIRouter, Body, HTTPException, status
 
 from models.events import Event
 from typing import List
@@ -9,34 +7,19 @@ event_router = APIRouter(
     tags=["Events"]
 )
 
-templates = Jinja2Templates(directory="templates/")
-
 events = []
 
 
-@event_router.get("/", response_class=HTMLResponse)
-async def retrieve_all_events(request: Request):
-    return templates.TemplateResponse(
-        "event.html",
-        {
-            "request": request,
-            "events": events
-        }
-    )
+@event_router.get("/", response_model=List[Event])
+async def retrieve_all_events():
+    return events    
 
 
-@event_router.get("/{id}", response_class=HTMLResponse)
-async def retrieve_event(id: int, request: Request):
+@event_router.get("/{id}", response_model=Event)
+async def retrieve_event(id: int):
     for event in events:
         if event.id == id:
-            return templates.TemplateResponse(
-                "event.html",
-                {
-                    "request": request,
-                    "event": event
-                }
-            )
-
+            return event
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail="Event with supplied ID does not exist"
