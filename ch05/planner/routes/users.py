@@ -1,18 +1,15 @@
-from fastapi import APIRouter, HTTPException, Request, status, Depends
-from fastapi.templating import Jinja2Templates
+from fastapi import APIRouter, HTTPException, status
 
-from models.users import NewUser, UserSignIn
+from models.users import User, UserSignIn
 
 user_router = APIRouter(
     tags=["User"],
 )
 
 users = {}
-templates = Jinja2Templates(directory="templates/")
-
 
 @user_router.post("/signup")
-async def sign_user_up(request: Request, data: NewUser = Depends(NewUser.as_form)):
+async def sign_user_up( data: User):
     if data.email in users:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -21,14 +18,13 @@ async def sign_user_up(request: Request, data: NewUser = Depends(NewUser.as_form
 
     users[data.email] = data
 
-    return templates.TemplateResponse("user.html", {
-        "request": request,
-        "signed_in": True,
-    })
+    return { 
+        "message": "User successfully registered!"
+        }
 
 
 @user_router.post("/signin")
-async def sign_user_in(request: Request, user: UserSignIn = Depends(UserSignIn.as_form)):
+async def sign_user_in(user: UserSignIn):
     if user.email not in users:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -40,30 +36,6 @@ async def sign_user_in(request: Request, user: UserSignIn = Depends(UserSignIn.a
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Wrong credential passed"
         )
-    return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request,
-            "signed_in": True
-        }
-    )
-
-
-@user_router.get("/")
-async def render_login_page(request: Request):
-    return templates.TemplateResponse(
-        "user.html", {
-            "request": request,
-            "sign_in": True
-        }
-    )
-
-
-@user_router.get("/signup")
-async def render_signup_page(request: Request):
-    return templates.TemplateResponse(
-        "user.html", {
-            "request": request,
-            "sign_in": False
-        }
-    )
+    return {
+        "message": "User signed in successfully"
+    }
