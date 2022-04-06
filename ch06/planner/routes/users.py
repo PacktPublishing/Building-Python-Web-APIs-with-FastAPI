@@ -1,69 +1,43 @@
-from fastapi import APIRouter, HTTPException, Request, status, Depends
-from fastapi.templating import Jinja2Templates
+from fastapi import APIRouter, HTTPException, status
+from database.database import Database
 
-from models.users import NewUser, UserSignIn
+from models.users import User, UserSignIn
 
 user_router = APIRouter(
     tags=["User"],
 )
 
-users = {}
-templates = Jinja2Templates(directory="templates/")
-
+user_database = Database(User)
 
 @user_router.post("/signup")
-async def sign_user_up(request: Request, data: NewUser = Depends(NewUser.as_form)):
-    if data.email in users:
+async def sign_user_up(user: User):
+    user_exist = await User.find_one(User.email == user.email)
+    print(user_exist)
+    if user_exist:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="User with supplied username exists"
+            detail="User with email provided exists already."
         )
-
-    users[data.email] = data
-
-    return templates.TemplateResponse("user.html", {
-        "request": request,
-        "signed_in": True,
-    })
+    await user_database.save(user)
+    return {
+        "message": "User created successfully"
+    }
 
 
 @user_router.post("/signin")
-async def sign_user_in(request: Request, user: UserSignIn = Depends(UserSignIn.as_form)):
-    if user.email not in users:
+async def sign_user_in(user: UserSignIn):
+    user_exist = await User.find_one(User.email == user.email)
+    if not user_exist:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="User does not exist"
+            detail="User with email does not exist."
         )
-
-    if users[user.email].password != user.password:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Wrong credential passed"
-        )
-    return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request,
-            "signed_in": True
+    if user_exist.password == user.password:
+        return {
+            "message": "User signed in successfully."
         }
-    )
-
-
-@user_router.get("/")
-async def render_login_page(request: Request):
-    return templates.TemplateResponse(
-        "user.html", {
-            "request": request,
-            "sign_in": True
-        }
-    )
-
-
-@user_router.get("/signup")
-async def render_signup_page(request: Request):
-    return templates.TemplateResponse(
-        "user.html", {
-            "request": request,
-            "sign_in": False
-        }
+    
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid details passed."
     )
