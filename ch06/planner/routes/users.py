@@ -12,7 +12,7 @@ user_database = Database(User)
 @user_router.post("/signup")
 async def sign_user_up(user: User):
     user_exist = await User.find_one(User.email == user.email)
-    print(user_exist)
+    
     if user_exist:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
