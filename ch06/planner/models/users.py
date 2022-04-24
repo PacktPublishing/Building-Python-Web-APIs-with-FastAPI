@@ -1,15 +1,12 @@
-from typing import Optional, List
-from beanie import Document, Link
+from beanie import Document
 
 from pydantic import BaseModel, EmailStr
 
-from models.events import Event
 
 
 class User(Document):
     email: EmailStr
     password: str
-    events: Optional[List[Link[Event]]]
 
     class Collection:
         name = "users"
@@ -19,7 +16,6 @@ class User(Document):
             "example": {
                 "email": "fastapi@packt.com",
                 "password": "strong!!!",
-                "events": [],
             }
         }
 
