@@ -10,11 +10,10 @@ class Event(SQLModel, table=True):
     description: str
     tags: List[str] = Field(sa_column=Column(JSON))
     location: str
-
-    class Config:
-        arbitrary_types_allowed = True
         
     class Config:
+        arbitrary_types_allowed = True
+
         schema_extra = {
             "example": {
                 "title": "FastAPI BookLaunch",
