@@ -6,7 +6,7 @@ todo_router = APIRouter()
 todo_list = []
 
 
-@todo_router.post("/todo")
+@todo_router.post("/todo", status_code=201)
 async def add_todo(todo: Todo):
     todo_list.append(todo)
     return {
