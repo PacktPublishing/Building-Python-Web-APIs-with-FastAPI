@@ -1,10 +1,11 @@
-from beanie import init_beanie, PydanticObjectId
-from motor.motor_asyncio import AsyncIOMotorClient
 from typing import Optional
+
+from beanie import init_beanie, PydanticObjectId
+from models.events import Event
+from models.users import User
+from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseSettings, BaseModel
 
-from models.users import User
-from models.events import Event
 
 class Settings(BaseSettings):
     DATABASE_URL: Optional[str] = None
@@ -13,7 +14,7 @@ class Settings(BaseSettings):
     async def initialize_database(self):
         client = AsyncIOMotorClient(self.DATABASE_URL)
         await init_beanie(database=client.get_default_database(),
-                      document_models=[Event, User])
+                          document_models=[Event, User])
 
     class Config:
         env_file = ".env"
@@ -22,7 +23,7 @@ class Settings(BaseSettings):
 class Database:
     def __init__(self, model):
         self.model = model
-    
+
     async def save(self, document):
         await document.create()
         return
@@ -41,11 +42,11 @@ class Database:
         doc_id = id
         des_body = body.dict()
 
-        des_body = {k:v for k,v in des_body.items() if v is not None}
+        des_body = {k: v for k, v in des_body.items() if v is not None}
         update_query = {"$set": {
             field: value for field, value in des_body.items()
         }}
-        
+
         doc = await self.get(doc_id)
         if not doc:
             return False

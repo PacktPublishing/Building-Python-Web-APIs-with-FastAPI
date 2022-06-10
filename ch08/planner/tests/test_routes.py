@@ -128,4 +128,3 @@ async def test_get_event_again(default_client: httpx.AsyncClient, mock_event: Ev
     response = await default_client.get(url)
 
     assert response.status_code == 404
-

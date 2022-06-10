@@ -1,11 +1,10 @@
-from beanie import PydanticObjectId
-from fastapi import APIRouter, Depends, HTTPException, status
-from database.database import Database
+from typing import List
 
 from auth.authenticate import authenticate
-
+from beanie import PydanticObjectId
+from database.database import Database
+from fastapi import APIRouter, Depends, HTTPException, status
 from models.events import Event, EventUpdate
-from typing import List
 
 event_router = APIRouter(
     tags=["Events"]
@@ -15,13 +14,13 @@ event_database = Database(Event)
 
 
 @event_router.get("/", response_model=List[Event])
-async def retrieve_all_events():
+async def retrieve_all_events() -> List[Event]:
     events = await event_database.get_all()
     return events
 
 
 @event_router.get("/{id}", response_model=Event)
-async def retrieve_event(id: PydanticObjectId):
+async def retrieve_event(id: PydanticObjectId) -> Event:
     event = await event_database.get(id)
     if not event:
         raise HTTPException(
@@ -32,7 +31,7 @@ async def retrieve_event(id: PydanticObjectId):
 
 
 @event_router.post("/new")
-async def create_event(body: Event, user: str = Depends(authenticate)):
+async def create_event(body: Event, user: str = Depends(authenticate)) -> dict:
     body.creator = user
     await event_database.save(body)
     return {
@@ -41,7 +40,7 @@ async def create_event(body: Event, user: str = Depends(authenticate)):
 
 
 @event_router.put("/{id}", response_model=Event)
-async def update_event(id: PydanticObjectId, body: EventUpdate, user: str = Depends(authenticate)):
+async def update_event(id: PydanticObjectId, body: EventUpdate, user: str = Depends(authenticate)) -> Event:
     event = await event_database.get(id)
     if event.creator != user:
         raise HTTPException(
@@ -58,7 +57,7 @@ async def update_event(id: PydanticObjectId, body: EventUpdate, user: str = Depe
 
 
 @event_router.delete("/{id}")
-async def delete_event(id: PydanticObjectId, user: str = Depends(authenticate)):
+async def delete_event(id: PydanticObjectId, user: str = Depends(authenticate)) -> dict:
     event = await event_database.get(id)
     if event.creator != user:
         raise HTTPException(

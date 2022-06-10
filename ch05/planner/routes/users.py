@@ -8,8 +8,9 @@ user_router = APIRouter(
 
 users = {}
 
+
 @user_router.post("/signup")
-async def sign_user_up( data: User):
+async def sign_user_up(data: User) -> dict
     if data.email in users:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -18,13 +19,13 @@ async def sign_user_up( data: User):
 
     users[data.email] = data
 
-    return { 
+    return {
         "message": "User successfully registered!"
-        }
+    }
 
 
 @user_router.post("/signin")
-async def sign_user_in(user: UserSignIn):
+async def sign_user_in(user: UserSignIn) -> dict:
     if user.email not in users:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

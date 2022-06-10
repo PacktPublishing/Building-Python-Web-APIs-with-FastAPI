@@ -1,9 +1,9 @@
 import asyncio
+
 import httpx
 import pytest
-
-from main import app
 from database.database import Settings
+from main import app
 from models.events import Event
 from models.users import User
 

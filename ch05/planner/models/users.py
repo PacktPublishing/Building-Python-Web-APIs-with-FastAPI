@@ -1,7 +1,6 @@
 from pydantic import BaseModel, EmailStr
 
 
-
 class User(BaseModel):
     email: EmailStr
     password: str
@@ -20,8 +19,8 @@ class UserSignIn(BaseModel):
     password: str
 
     schema_extra = {
-            "example": {
-                "email": "fastapi@packt.com",
-                "password": "strong!!!"
-            }
+        "example": {
+            "email": "fastapi@packt.com",
+            "password": "strong!!!"
         }
+    }

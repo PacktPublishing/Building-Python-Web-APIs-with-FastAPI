@@ -1,5 +1,4 @@
-import pytest 
-
+import pytest
 
 # Fixture is defined.
 from models.events import EventUpdate

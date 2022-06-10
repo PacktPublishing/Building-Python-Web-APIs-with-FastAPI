@@ -1,11 +1,9 @@
-from curses.ascii import HT
 import time
 from datetime import datetime
 
+from database.database import Settings
 from fastapi import HTTPException, status
 from jose import jwt, JWTError
-
-from database.database import Settings
 
 settings = Settings()
 

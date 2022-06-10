@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
-from database.database import Settings
+from database.connection import Settings
 
 from routes.users import user_router
 from routes.events import event_router

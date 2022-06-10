@@ -1,10 +1,10 @@
-from beanie import init_beanie, PydanticObjectId
-from motor.motor_asyncio import AsyncIOMotorClient
 from typing import Optional, Any, List
-from pydantic import BaseSettings, BaseModel
 
-from models.users import User
+from beanie import init_beanie, PydanticObjectId
 from models.events import Event
+from models.users import User
+from motor.motor_asyncio import AsyncIOMotorClient
+from pydantic import BaseSettings, BaseModel
 
 
 class Settings(BaseSettings):

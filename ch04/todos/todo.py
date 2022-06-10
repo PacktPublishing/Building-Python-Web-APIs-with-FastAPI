@@ -45,7 +45,7 @@ async def get_single_todo(request: Request, todo_id: int = Path(..., title="The 
 
 @todo_router.put("/todo/{todo_id}")
 async def update_todo(request: Request, todo_data: TodoItem,
-                      todo_id: int = Path(..., title="The ID of the todo to be updated.")):
+                      todo_id: int = Path(..., title="The ID of the todo to be updated.")) -> dict:
     for todo in todo_list:
         if todo.id == todo_id:
             todo.item = todo_data.item
@@ -60,7 +60,7 @@ async def update_todo(request: Request, todo_data: TodoItem,
 
 
 @todo_router.delete("/todo/{todo_id}")
-async def delete_single_todo(request: Request, todo_id: int):
+async def delete_single_todo(request: Request, todo_id: int) -> dict:
     for index in range(len(todo_list)):
         todo = todo_list[index]
         if todo.id == todo_id:
@@ -75,7 +75,7 @@ async def delete_single_todo(request: Request, todo_id: int):
 
 
 @todo_router.delete("/todo")
-async def delete_all_todo():
+async def delete_all_todo() -> dict:
     todo_list.clear()
     return {
         "message": "Todos deleted successfully."

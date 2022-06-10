@@ -1,10 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
-from database.database import Database
-
-from models.users import User, TokenResponse
 from auth.hash_password import HashPassword
 from auth.jwt_handler import create_access_token
+from database.database import Database
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
+from models.users import User, TokenResponse
 
 user_router = APIRouter(
     tags=["User"],
@@ -15,7 +14,7 @@ hash_password = HashPassword()
 
 
 @user_router.post("/signup")
-async def sign_user_up(user: User):
+async def sign_user_up(user: User) -> dict:
     user_exist = await User.find_one(User.email == user.email)
 
     if user_exist:
@@ -32,7 +31,7 @@ async def sign_user_up(user: User):
 
 
 @user_router.post("/signin", response_model=TokenResponse)
-async def sign_user_in(user: OAuth2PasswordRequestForm = Depends()):
+async def sign_user_in(user: OAuth2PasswordRequestForm = Depends()) -> dict:
     user_exist = await User.find_one(User.email == user.username)
     if not user_exist:
         raise HTTPException(
@@ -45,7 +44,7 @@ async def sign_user_in(user: OAuth2PasswordRequestForm = Depends()):
             "access_token": access_token,
             "token_type": "Bearer"
         }
-    
+
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Invalid details passed."

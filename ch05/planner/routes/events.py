@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Body, HTTPException, status
-
-from models.events import Event
 from typing import List
+
+from fastapi import APIRouter, Body, HTTPException, status
+from models.events import Event
 
 event_router = APIRouter(
     tags=["Events"]
@@ -11,12 +11,12 @@ events = []
 
 
 @event_router.get("/", response_model=List[Event])
-async def retrieve_all_events():
-    return events    
+async def retrieve_all_events() -> List[Event]:
+    return events
 
 
 @event_router.get("/{id}", response_model=Event)
-async def retrieve_event(id: int):
+async def retrieve_event(id: int) -> Event:
     for event in events:
         if event.id == id:
             return event
@@ -27,7 +27,7 @@ async def retrieve_event(id: int):
 
 
 @event_router.post("/new")
-async def create_event(body: Event = Body(...)):
+async def create_event(body: Event = Body(...)) -> dict:
     events.append(body)
     return {
         "message": "Event created successfully"
@@ -35,7 +35,7 @@ async def create_event(body: Event = Body(...)):
 
 
 @event_router.delete("/{id}")
-async def delete_event(id: int):
+async def delete_event(id: int) -> dict:
     for event in events:
         if event.id == id:
             events.remove(event)

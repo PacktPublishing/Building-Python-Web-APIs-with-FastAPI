@@ -1,6 +1,5 @@
+from database.connection import Database
 from fastapi import APIRouter, HTTPException, status
-from database.database import Database
-
 from models.users import User, UserSignIn
 
 user_router = APIRouter(
@@ -9,10 +8,11 @@ user_router = APIRouter(
 
 user_database = Database(User)
 
+
 @user_router.post("/signup")
-async def sign_user_up(user: User):
+async def sign_user_up(user: User) -> dict:
     user_exist = await User.find_one(User.email == user.email)
-    
+
     if user_exist:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -25,7 +25,7 @@ async def sign_user_up(user: User):
 
 
 @user_router.post("/signin")
-async def sign_user_in(user: UserSignIn):
+async def sign_user_in(user: UserSignIn) -> dict:
     user_exist = await User.find_one(User.email == user.email)
     if not user_exist:
         raise HTTPException(
@@ -36,7 +36,7 @@ async def sign_user_in(user: UserSignIn):
         return {
             "message": "User signed in successfully."
         }
-    
+
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Invalid details passed."
