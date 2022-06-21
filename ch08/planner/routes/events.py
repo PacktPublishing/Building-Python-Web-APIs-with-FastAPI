@@ -61,8 +61,8 @@ async def delete_event(id: PydanticObjectId, user: str = Depends(authenticate)) 
     event = await event_database.get(id)
     if event.creator != user:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Operation not allowed"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Event not found"
         )
     if not event:
         raise HTTPException(
