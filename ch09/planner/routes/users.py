@@ -1,6 +1,6 @@
 from auth.hash_password import HashPassword
 from auth.jwt_handler import create_access_token
-from database.database import Database
+from database.connection import Database
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from models.users import User, TokenResponse
