@@ -2,7 +2,7 @@ from typing import List
 
 from auth.authenticate import authenticate
 from beanie import PydanticObjectId
-from database.database import Database
+from database.connection import Database
 from fastapi import APIRouter, Depends, HTTPException, status
 from models.events import Event, EventUpdate
 
