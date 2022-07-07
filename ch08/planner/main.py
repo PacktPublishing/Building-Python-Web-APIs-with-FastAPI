@@ -24,10 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 # Register routes
-
-
 
 app.include_router(user_router, prefix="/user")
 app.include_router(event_router, prefix="/event")
