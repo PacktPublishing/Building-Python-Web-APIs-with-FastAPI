@@ -10,7 +10,7 @@ users = {}
 
 
 @user_router.post("/signup")
-async def sign_user_up(data: User) -> dict
+async def sign_user_up(data: User) -> dict:
     if data.email in users:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
