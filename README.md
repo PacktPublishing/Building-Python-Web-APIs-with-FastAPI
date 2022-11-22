@@ -64,6 +64,7 @@ We also provide a PDF file that has color images of the screenshots/diagrams use
 ## Errata 
  * Page 14 (Code Snippet 1 line 1):  **FROM PYTHON:3.8** _should be_ **FROM python:3.8**
  * Page 15 (last line):  **FROM PYTHON:3.8** _should be_ **(venv)$ uvicorn api:app --port 8080 --reload**
+ * Page 10,11,12 :  Page 10 should display the picture of page 11. Page 11 should display the picture of page 12. Page 12 should display the picture of page 10.
  
 ## Get to Know the Author
 **Abdulazeez Abdulazeez Adeshina**
