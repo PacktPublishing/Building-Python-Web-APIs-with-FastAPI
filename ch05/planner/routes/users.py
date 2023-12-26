@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 
 from models.users import User, UserSignIn
+from typing import List
 
 user_router = APIRouter(
     tags=["User"],
@@ -40,3 +41,7 @@ async def sign_user_in(user: UserSignIn) -> dict:
     return {
         "message": "User signed in successfully"
     }
+
+@user_router.get('/', response_model=List[User])
+async def users_all() -> List[User]:
+    return list(users.values())

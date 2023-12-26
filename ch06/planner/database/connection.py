@@ -6,6 +6,7 @@ from models.users import User
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseSettings, BaseModel
 
+from sqlmodel import JSON, sqlmodel, field, column
 
 class Settings(BaseSettings):
     DATABASE_URL: Optional[str] = None
@@ -58,3 +59,4 @@ class Database:
             return False
         await doc.delete()
         return True
+
