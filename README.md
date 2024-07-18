@@ -68,6 +68,13 @@ We also provide a PDF file that has color images of the screenshots/diagrams use
  * Page 14 (Code Snippet 1 line 1):  **FROM PYTHON:3.8** _should be_ **FROM python:3.8**
  * Page 15 (last line):  **FROM PYTHON:3.8** _should be_ **(venv)$ uvicorn api:app --port 8080 --reload**
  * Page 10,11,12 :  Page 10 should display the picture of page 11. Page 11 should display the picture of page 12. Page 12 should display the picture of page 10.
+ * Page 24, (Code snippet 2 Line 1):
+       ```from Pydantic import BaseModel
+          class Todo(BaseMode):```
+       _should be_
+       ```from pydantic import BaseModel
+          class Todo(BaseModel):```
+ * Page 24, **Let’s go ahead and use the model in our POST route. In api.py, import the model** _should be_ **Let’s go ahead and use the model in our POST route. In todo.py, import the model**
  
 ## Get to Know the Author
 **Abdulazeez Abdulazeez Adeshina**
