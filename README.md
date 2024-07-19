@@ -65,6 +65,7 @@ We also provide a PDF file that has color images of the screenshots/diagrams use
 * Becoming an Enterprise Django Developer [[Packt]](https://www.packtpub.com/product/becoming-an-enterprise-django-developer/9781801073639?_ga=2.127463693.1837201707.1657723916-1157268863.1584421665&utm_source=github&utm_medium=repository&utm_campaign=9781801073639) [[Amazon]](https://www.amazon.com/dp/1801073635)
 
 ## Errata 
+ * **Use port 8000 as per the GitHub repository examples.**
  * Page 14 (Code Snippet 1 line 1):  **FROM PYTHON:3.8** _should be_ **FROM python:3.8**
  * Page 15 (last line):  **FROM PYTHON:3.8** _should be_ **(venv)$ uvicorn api:app --port 8080 --reload**
  * Page 10,11,12 :  Page 10 should display the picture of page 11. Page 11 should display the picture of page 12. Page 12 should display the picture of page 10.
